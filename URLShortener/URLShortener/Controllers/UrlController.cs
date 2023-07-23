@@ -17,25 +17,23 @@ namespace URLShortener.Controllers
     public class UrlController : Controller
     {
         private readonly IUrlService _urlService;
-        private string _baseUrl;
 
-        public UrlController(IUrlService urlService, IConfiguration configuration)
+        public UrlController(IUrlService urlService)
         {
             _urlService = urlService;
         }
 
         public IActionResult Index(string shortUrl)
         {
-            _baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
-
+            string baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
 
             ViewData["ShortUrl"] = shortUrl ?? string.Empty;
 
             var displayMappings = _urlService.GetAllMappings()
                 .Select(mapping => new DisplayUrlMapping
                 {
-                    LongUrl = mapping.LongUrl.Length > 64 ? $"{mapping.LongUrl[..64]}..." : mapping.LongUrl,
-                    FullShortUrl = $"{_baseUrl}/{mapping.ShortUrl}",
+                    LongUrl = mapping.LongUrl.Length > 64 ? $"{mapping.LongUrl[..64]}..." : mapping.LongUrl, // max 64 characters for viewing
+                    FullShortUrl = $"{baseUrl}/{mapping.ShortUrl}",
                     Clicks = mapping.Clicks
                 }).ToList();
             ViewData["Urls"] = displayMappings;
