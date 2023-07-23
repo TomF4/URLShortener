@@ -1,0 +1,57 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    var urls = ViewData["Urls"] as ICollection<DisplayUrlMapping>;
+
+    List<string> testUrls = new List<string> { "google.com","http://www.google.com", "http://www.example.com", "http://www.test.com" };
+}
+
+
+<div class="d-flex justify-content-center align-items-center " style="height: 100vh; padding: 10px; max-width: 100%; margin: auto;">
+    <form asp-action="Create" method="post" class="text-center" style="width: 100%;">
+
+        <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align:center; max-width: 100%; margin: auto;">
+            <div style="flex: 1; margin-bottom: 10px; max-width: 100%; text-align: center;">
+                <h3>Test URLs:</h3>
+                @if (testUrls != null && testUrls.Count > 0)
+                {
+                    <ul style="text-align: center;">
+                        @foreach (var testUrl in testUrls)
+                        {
+                            <li style="display: block; margin: auto;"><a href="@testUrl" style="text-decoration: none; color: inherit;">@testUrl</a></li>
+                        }
+                    </ul>
+                }
+            </div>
+
+            <div style="flex: 1; margin-top: 10px; max-width: 100%; text-align: center;">
+                <h3>URLs:</h3>
+                @if (urls != null && urls.Count > 0)
+                {
+                    <ul style="text-align: center;">
+                        @foreach (var url in urls)
+                        {
+                            <li style="display: block; margin: auto;">
+                                <a href="@url.LongUrl" style="text-decoration: none; color: inherit;">@url.LongUrl</a>
+                                ->
+                                <a href="@url.FullShortUrl" style="text-decoration: none; color: inherit;">@url.FullShortUrl</a>
+                                has @url.Clicks clicks
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+        </div>
+
+        <div class="form-group" style="padding: 10px; max-width: 500px; margin: auto;">
+            <input name="longUrl" placeholder="Enter your URL here" required class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-primary" style="background-color:white; color:black">
+            Shorten
+        </button>
+
+        @if (!string.IsNullOrEmpty(ViewData["ShortUrl"] as string))
+        {
+            <div id="result">Shortened URL: @ViewData["ShortUrl"]</div>
+        }
+    </form>
+</div>
